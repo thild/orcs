@@ -7,6 +7,9 @@
         "*.tcc": "cpp",
         "future": "cpp",
         "istream": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "scoped_allocator": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp"
     }
 }

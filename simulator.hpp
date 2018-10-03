@@ -4,6 +4,7 @@
 #define _ORCS_ORCS_HPP_
 
 /// C Includes
+#include <stdint.h>     /* ints */
 #include <unistd.h>     /* for getopt */
 #include <getopt.h>     /* for getopt_long; POSIX standard getopt is in unistd.h */
 #include <inttypes.h>   /* for uint32_t */
@@ -130,6 +131,9 @@ enum branch_t {
 
 #include "./branch_predictor/btb_line.hpp"
 #include "./branch_predictor/btb_set.hpp"
+#include "./branch_predictor/branch_predictor.hpp"
+#include "./branch_predictor/branch_unit.hpp"
+#include "./branch_predictor/smith_predictor.hpp"
 #include "./processor.hpp"
 
 

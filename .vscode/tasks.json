@@ -4,13 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "build",
             "type": "shell",
-            "command": "make all",
+            "command": "sh",
+            "args": ["build.sh"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
         }
     ]
 }
