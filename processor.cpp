@@ -11,8 +11,10 @@ processor_t::processor_t() {
 void processor_t::allocate() {
 	this->btb_set = new btb_set_t(10);
 	this->btb_set->allocate();
-	this->smith_predictor_1 = new branch_unit_t(10, new smith_predictor(10, 1));
-	this->smith_predictor_2 = new branch_unit_t(10, new smith_predictor(10, 2));
+	this->btb_only = new branch_unit_t(10, 0, 0, false, false, 8, NULL);
+	this->smith_predictor_1 = new branch_unit_t(10, 8, 1, false, false, 8, new smith_predictor());
+	this->smith_predictor_gbh_1 = new branch_unit_t(10, 8, 1, true, false, 8, new smith_predictor());
+	this->smith_predictor_gbh_xor_1 = new branch_unit_t(10, 10, 2, false, true, 10, new smith_predictor());
 };
 
 // miss latency
@@ -33,24 +35,28 @@ void processor_t::clock() {
 		orcs_engine.simulator_alive = false;
 	}
 	else {
-		if(new_instruction.opcode_operation == instruction_operation_t::INSTRUCTION_OPERATION_BRANCH) {
-			this->branching = true;
-			this->next_fetch_address = this->smith_predictor_1->next_fetch_address(new_instruction.opcode_address);
-			this->previous_fetch_address = new_instruction.opcode_address;
-			return;
-		}
 		if (this->branching) {
-			if(this->next_fetch_address == 0 || this->next_fetch_address == new_instruction.opcode_address) {
-				// printf("hit %lx\n", new_instruction.opcode_address);
-				this->smith_predictor_1->update(this->previous_fetch_address, new_instruction.opcode_address, true);
-				// printf("hit %lx\n", this->next_fetch_address);
-			}
-			else {
-				// miss
-				this->smith_predictor_1->update(this->previous_fetch_address, new_instruction.opcode_address, false);
-				// printf("miss %lx - %lx\n", this->previous_fetch_address, new_instruction.opcode_address);
-			}
+			auto r = this->btb_only_result;
+			this->btb_only->update(r, new_instruction.opcode_address);
+			r = this->smith_predictor_1_result;
+			this->smith_predictor_1->update(r, new_instruction.opcode_address);
+			r = this->smith_predictor_gbh_1_result;
+			this->smith_predictor_gbh_1->update(r, new_instruction.opcode_address);
+			r = this->smith_predictor_gbh_xor_1_result;
+			this->smith_predictor_gbh_xor_1->update(r, new_instruction.opcode_address);
+			// ORCS_PRINTF("target: %ld\n", get<1>(r));
+			// ORCS_PRINTF("taken : %ld\n", new_instruction.opcode_address);
+			// ORCS_PRINTF("dhits : %ld\n", this->smith_predictor_1->direction_hits);
 			this->branching = false;
+		}
+		if(new_instruction.opcode_operation == instruction_operation_t::INSTRUCTION_OPERATION_BRANCH) {
+			this->num_branches++;
+			this->branching = true;
+			this->btb_only_result = this->btb_only->next_fetch_address(new_instruction.opcode_address);
+			this->smith_predictor_1_result = this->smith_predictor_1->next_fetch_address(new_instruction.opcode_address);
+			this->smith_predictor_gbh_1_result = this->smith_predictor_gbh_1->next_fetch_address(new_instruction.opcode_address);
+			this->smith_predictor_gbh_xor_1_result = this->smith_predictor_gbh_xor_1->next_fetch_address(new_instruction.opcode_address);
+			// ORCS_PRINTF("fetch : %ld\n", new_instruction.opcode_address);
 		}
 	}
 
@@ -60,8 +66,33 @@ void processor_t::clock() {
 void processor_t::statistics() {
 	ORCS_PRINTF("######################################################\n");
 	ORCS_PRINTF("processor_t\n");
-	ORCS_PRINTF("this->misses: %ld\n", this->misses);
-	ORCS_PRINTF("misses: %ld\n", this->smith_predictor_1->misses);
-	ORCS_PRINTF("fetchs: %ld\n", orcs_engine.trace_reader->fetch_instructions);
-	ORCS_PRINTF("rate: %lf\n", (1 - (double)this->smith_predictor_1->misses / orcs_engine.trace_reader->fetch_instructions) * 100);
+	ORCS_PRINTF("\n\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	ORCS_PRINTF("btb_only\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	this->print(this->btb_only, orcs_engine.trace_reader->fetch_instructions, this->num_branches);
+	ORCS_PRINTF("\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	ORCS_PRINTF("smith_predictor_1\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	this->print(this->smith_predictor_1, orcs_engine.trace_reader->fetch_instructions, this->num_branches);
+	ORCS_PRINTF("\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	ORCS_PRINTF("smith_predictor_gbh_1\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	this->print(this->smith_predictor_gbh_1, orcs_engine.trace_reader->fetch_instructions, this->num_branches);
+	ORCS_PRINTF("\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	ORCS_PRINTF("smith_predictor_gbh_xor_1\n");
+	ORCS_PRINTF("------------------------------------------------------\n");
+	this->print(this->smith_predictor_gbh_xor_1, orcs_engine.trace_reader->fetch_instructions, this->num_branches);
 };
+
+void processor_t::print(branch_unit_t *branch_unit, uint64_t fetch_instructions, uint64_t num_branches) {
+	ORCS_PRINTF("fetchs: %ld\n", fetch_instructions);
+	ORCS_PRINTF("branchs: %ld\n", num_branches);
+	ORCS_PRINTF("btb hits: %ld\n", branch_unit->btb_hits);
+	ORCS_PRINTF("direction hits: %ld\n", branch_unit->direction_hits);
+	ORCS_PRINTF("btb hitrate: %lf\n", ((double)branch_unit->btb_hits / num_branches) * 100);
+	ORCS_PRINTF("direction hitrate: %lf\n", ((double)branch_unit->direction_hits / num_branches) * 100);
+}

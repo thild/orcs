@@ -1,0 +1,268 @@
+rm -f simulator.o orcs_engine.o trace_reader.o opcode_package.o processor.o
+rm -f orcs
+OrCS cleaned!
+
+g++ -c -ggdb -Wall -Wextra -Werror simulator.cpp -o simulator.o
+g++ -c -ggdb -Wall -Wextra -Werror orcs_engine.cpp -o orcs_engine.o
+g++ -c -ggdb -Wall -Wextra -Werror trace_reader.cpp -o trace_reader.o
+g++ -c -ggdb -Wall -Wextra -Werror opcode_package.cpp -o opcode_package.o
+g++ -c -ggdb -Wall -Wextra -Werror processor.cpp -o processor.o
+g++ -ggdb -o orcs simulator.o orcs_engine.o trace_reader.o opcode_package.o processor.o -lz
+===========================
+dealII
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001503
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001503
+branchs: 31824134
+btb hits: 31818312
+direction hits: 0
+btb hitrate: 99.981706
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001503
+branchs: 31824134
+btb hits: 31818312
+direction hits: 27691468
+btb hitrate: 99.981706
+direction hitrate: 87.014050
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001503
+branchs: 31824134
+btb hits: 31818312
+direction hits: 27045643
+btb hitrate: 99.981706
+direction hitrate: 84.984694
+
+
+===========================
+calculix
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001551
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001551
+branchs: 3926849
+btb hits: 3926596
+direction hits: 0
+btb hitrate: 99.993557
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001551
+branchs: 3926849
+btb hits: 3926596
+direction hits: 1674330
+btb hitrate: 99.993557
+direction hitrate: 42.638003
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001551
+branchs: 3926849
+btb hits: 3926596
+direction hits: 2217093
+btb hitrate: 99.993557
+direction hitrate: 56.459849
+
+
+===========================
+namd
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001502
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001502
+branchs: 36628465
+btb hits: 36627388
+direction hits: 0
+btb hitrate: 99.997060
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001502
+branchs: 36628465
+btb hits: 36627388
+direction hits: 32099280
+btb hitrate: 99.997060
+direction hitrate: 87.634794
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001502
+branchs: 36628465
+btb hits: 36627388
+direction hits: 30204705
+btb hitrate: 99.997060
+direction hitrate: 82.462383
+
+
+===========================
+gromacs
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001492
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001492
+branchs: 5078392
+btb hits: 5077244
+direction hits: 0
+btb hitrate: 99.977394
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001492
+branchs: 5078392
+btb hits: 5077244
+direction hits: 4091489
+btb hitrate: 99.977394
+direction hitrate: 80.566624
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001492
+branchs: 5078392
+btb hits: 5077244
+direction hits: 4022977
+btb hitrate: 99.977394
+direction hitrate: 79.217536
+
+
+===========================
+libquantum
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001503
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001503
+branchs: 34952125
+btb hits: 34952067
+direction hits: 0
+btb hitrate: 99.999834
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001503
+branchs: 34952125
+btb hits: 34952067
+direction hits: 31904911
+btb hitrate: 99.999834
+direction hitrate: 91.281749
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001503
+branchs: 34952125
+btb hits: 34952067
+direction hits: 32128336
+btb hitrate: 99.999834
+direction hitrate: 91.920980
+
+
+===========================
+astar
+===========================
+End of dynamic simulation trace
+End of Simulation
+######################################################
+trace_reader_t
+fetch_instructions:200001517
+######################################################
+processor_t
+
+
+------------------------------------------------------
+btb_only
+------------------------------------------------------
+fetchs: 200001517
+branchs: 37208971
+btb hits: 37208459
+direction hits: 0
+btb hitrate: 99.998624
+direction hitrate: 0.000000
+
+------------------------------------------------------
+smith_predictor_1
+------------------------------------------------------
+fetchs: 200001517
+branchs: 37208971
+btb hits: 37208459
+direction hits: 22918499
+btb hitrate: 99.998624
+direction hitrate: 61.594015
+
+------------------------------------------------------
+smith_predictor_1_gbh
+------------------------------------------------------
+fetchs: 200001517
+branchs: 37208971
+btb hits: 37208459
+direction hits: 24519313
+btb hitrate: 99.998624
+direction hitrate: 65.896240
+
+

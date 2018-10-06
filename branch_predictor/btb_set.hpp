@@ -12,13 +12,11 @@ class btb_set_t {
         /// Methods
         // ====================================================================
         // hit, target_address, opcode_address
-        uint64_t search (uint64_t opcode_address) {
-			uint32_t index = opcode_address & 0x2FF;
+        uint64_t search (uint32_t index, uint64_t opcode_address) {
             return lines[index].search(opcode_address); 
         }
 
-        void update (uint64_t opcode_address, uint64_t target_address) {
-			uint32_t index = opcode_address & 0x2FF;
+        void update (uint32_t index, uint64_t opcode_address, uint64_t target_address) {
 			lines[index].update(opcode_address, target_address);
         }
 

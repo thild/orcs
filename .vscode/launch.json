@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "orcs",
-            "args": ["-t", "traces/libquantum.CINT.PP200M"],
+            "args": ["-t", "traces/calculix.CFP.PP200M"],
             "preLaunchTask": "build",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
