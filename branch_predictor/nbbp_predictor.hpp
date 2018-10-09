@@ -70,7 +70,7 @@ class nbbp_predictor_t: public branch_predictor_t {
             uint8_t p1 = *py & 0x0F;            
             auto evidences = gbh;
             uint32_t mask = 0x1;
-            uint64_t y0 = 0, y1 = 0;
+            uint64_t y0 = (uint64_t)log10(p0), y1 = (uint64_t)log10(p1);
             for(size_t i = 0; i < this->gbh_width; i++)
             {
                 auto counter = &ctp->counters[i];
@@ -85,13 +85,11 @@ class nbbp_predictor_t: public branch_predictor_t {
                     y1 += (uint64_t)log10(px0y1);
                 }
                 else {
-                    y0 += (uint64_t)log10(px1y0);
-                    y1 += (uint64_t)log10(px1y1);
+                    y0 += (uint64_t)logf(px1y0);
+                    y1 += (uint64_t)logf(px1y1);
                 }
             }
-            y0 += (uint64_t)log10(p0);
-            y1 += (uint64_t)log10(p1);
-            return (uint64_t)log10(y0) < (uint64_t)log10(y1);
+            return (uint64_t)log(y0) < (uint64_t)logf(y1);
         }
 
 

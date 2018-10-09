@@ -19,7 +19,7 @@ void processor_t::allocate() {
 	// bu->description = "10 bits";
 	// this->branch_units.push_back(bu);
 
-	branch_unit_t* bu = new nbbp_branch_unit_t(10, false, 8, new nbbp_predictor_t(8, 8));
+	branch_unit_t* bu = new nbbp_branch_unit_t(10, true, 8, new nbbp_predictor_t(10, 8));
 	bu->name = "NBBP";
 	bu->description = "NBBP branch unit";
 	this->branch_units.push_back(bu);

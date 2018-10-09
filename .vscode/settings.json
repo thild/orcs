@@ -11,6 +11,8 @@
         "scoped_allocator": "cpp",
         "cmath": "cpp",
         "complex": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp"
     }
 }
