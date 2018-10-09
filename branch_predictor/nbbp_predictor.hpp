@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <math.h>       /* log */
-
+#include <bitset>
+#include <iostream>
 class ctp_t { 
 
     public:
@@ -66,30 +67,42 @@ class nbbp_predictor_t: public branch_predictor_t {
         bool predict(uint32_t index, uint32_t gbh) {
             auto ctp = &this->ctp_ltu->ltu[index];
             auto py = &this->py_ltu[index];
-            uint8_t p0 = (*py & 0xF0) >> 4;
-            uint8_t p1 = *py & 0x0F;            
             auto evidences = gbh;
             uint32_t mask = 0x1;
-            uint64_t y0 = (uint64_t)log10(p0), y1 = (uint64_t)log10(p1);
+            uint32_t y0 = (*py & 0x80) > 0;
+            uint32_t y1 = (*py & 0x8) > 0;
+            uint32_t c0 = (*py & 0x80) > 0;
+            uint32_t c1 = (*py & 0x8) > 0;
+            y0 <<= 1;
+            y1 <<= 1;
             for(size_t i = 0; i < this->gbh_width; i++)
             {
                 auto counter = &ctp->counters[i];
-                auto evidence = (uint8_t)((evidences & mask) == 1);
-                uint8_t px1y1 = (*counter & 0xF);
-                uint8_t px1y0 = (*counter & 0xF0) >> 4;
-                uint8_t px0y1 = (*counter & 0xF00) >> 8;
-                uint8_t px0y0 = (*counter & 0xF000) >> 12;
+                auto evidence = (uint8_t)((evidences & mask) > 0);
+                mask <<= 1;
 
                 if(evidence == 0) {
-                    y0 += (uint64_t)log10(px0y0);
-                    y1 += (uint64_t)log10(px0y1);
+                    y0 |= (*counter & 0x8000) > 0;
+                    c0 += (uint8_t)(*counter & 0x8000) > 0;
+                    y1 |= (*counter & 0x800) > 0;
+                    c1 += (uint8_t)(*counter & 0x800) > 0;
                 }
                 else {
-                    y0 += (uint64_t)logf(px1y0);
-                    y1 += (uint64_t)logf(px1y1);
+                    y0 |= (*counter & 0x80) > 0;
+                    c0 += (uint8_t)(*counter & 0x80) > 0;
+                    y1 |= (*counter & 0x8) > 0;
+                    c1 += (uint8_t)(*counter & 0x8) > 0;
                 }
+                
+                if (i < (size_t)this->gbh_width - 1) {
+                    y0 <<= 1;
+                    y1 <<= 1;
+                }
+                
             }
-            return (uint64_t)log(y0) < (uint64_t)logf(y1);
+            // cout << bitset<16>(y0) << " c0: " << c0 <<  "\n";
+            // cout << bitset<16>(y1) << " c1: " << c1 <<  "\n";
+            return c0 > c1;
         }
 
 
