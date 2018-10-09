@@ -132,9 +132,13 @@ enum branch_t {
 #include "./branch_predictor/btb_line.hpp"
 #include "./branch_predictor/btb_set.hpp"
 #include "./branch_predictor/branch_predictor.hpp"
-#include "./branch_predictor/two_level_ghb_predictor.hpp"
-#include "./branch_predictor/branch_unit.hpp"
+#include "./branch_predictor/pht_predictor.hpp"
 #include "./branch_predictor/smith_predictor.hpp"
+#include "./branch_predictor/nbbp_predictor.hpp"
+#include "./branch_predictor/branch_unit.hpp"
+#include "./branch_predictor/pht_branch_unit.hpp"
+#include "./branch_predictor/nbbp_branch_unit.hpp"
+#include "./branch_predictor/branch_unit_info.hpp"
 
 #include "./processor.hpp"
 

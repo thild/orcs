@@ -3,10 +3,10 @@
 
 using namespace std;
 
-class pht_branch_unit_t : public branch_unit_t {
+class nbbp_branch_unit_t : public branch_unit_t {
     private:
     
-        uint32_t calculate_pht_index(uint64_t opcode_address) {
+        uint32_t calculate_cpt_index(uint64_t opcode_address) {
             auto indexer = opcode_address;
             if(use_gbh)  {
                 indexer = gbh;
@@ -15,20 +15,19 @@ class pht_branch_unit_t : public branch_unit_t {
             {
                 indexer ^= gbh;
             }
-            return indexer & ((1 << pht_depth) - 1);
+            return indexer & ((1 << cpt_depth) - 1);
         }
 
     public:
 
-        uint8_t pht_depth = 0;
-        uint8_t pht_history_width = 0;
+        uint8_t cpt_depth = 0;
 
         void next_fetch_address(uint64_t opcode_address) override {
             auto btb_result = calculate_btb_result(opcode_address);
             
             auto prediction = false;
             if (this->branch_predictor != NULL) {
-                auto index = calculate_pht_index(opcode_address);
+                auto index = calculate_cpt_index(opcode_address);
                 prediction = this->branch_predictor->predict(index, gbh);
             }
             
@@ -45,28 +44,20 @@ class pht_branch_unit_t : public branch_unit_t {
             if (this->branch_predictor != NULL) {
                 auto taken = target_address == opcode_address_taken;
                 auto direction_hit = direction_prediction == taken;
-    		 	index = calculate_pht_index(opcode_address);
+    		 	index = calculate_cpt_index(opcode_address);
                 update_gbh(taken);
                 this->branch_predictor->update(index, gbh, taken);
                 if(direction_hit) this->direction_hits++;
             }
         }
 
-        pht_branch_unit_t(uint8_t btb_depth, 
-                          uint8_t pht_depth, 
-                          uint8_t pht_history_width, 
-                          bool use_gbh, 
+        nbbp_branch_unit_t(uint8_t btb_depth, 
                           bool gshare, 
                           uint8_t gbh_width, 
-                          branch_predictor_t *branch_predictor) : branch_unit_t(btb_depth, use_gbh, gbh_width, gshare, branch_predictor) {
-            if (use_gbh)
-            {
-                this->pht_depth = gbh_width;
-            }
-            this->pht_depth = pht_depth;
-            this->pht_history_width = pht_history_width;
+                          branch_predictor_t *branch_predictor) : branch_unit_t(btb_depth, true, gbh_width, gshare, branch_predictor) {
+            this->cpt_depth = gbh_width;
         }
 
-        ~pht_branch_unit_t() {
+        ~nbbp_branch_unit_t() {
         }
 };

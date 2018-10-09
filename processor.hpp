@@ -1,13 +1,12 @@
+#include <vector> 
 // ============================================================================
 // ============================================================================
 class processor_t {
     private:    
-		void print(branch_unit_t *branch_unit, uint64_t fetch_instructions, uint64_t num_branches);
+		void print();
 	
     
     public:
-        btb_set_t *btb_set;
-		uint64_t btb_result;
 		uint64_t num_branches = 0;
 		branch_unit_t *smith_predictor_1;
 		branch_unit_t *smith_predictor_gbh_xor_1;
@@ -19,6 +18,7 @@ class processor_t {
 		tuple<uint64_t, uint64_t, bool, bool> btb_only_result;
 		bool branching;
 
+		vector<branch_unit_t*> branch_units;
 		// ====================================================================
 		/// Methods
 		// ====================================================================
